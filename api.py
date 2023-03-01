@@ -3,12 +3,16 @@ import os
 
 app = Flask(__name__)
 
+# Calibrations
+CO2_ton_MWh = 0.3
+
 @app.route('/productionplan', methods=['POST'])
 def determine_production_plan():
     data = request.json
     for powerplant in data['powerplants']:
         if powerplant['type'] == 'gasfired':
-            powerplant['cost'] = data['fuels']['gas(euro/MWh)']/powerplant['efficiency']
+            powerplant['cost'] = data['fuels']['gas(euro/MWh)']/powerplant['efficiency'] + \
+                                 data['fuels']['co2(euro/ton)']*CO2_ton_MWh
         elif powerplant['type'] == 'turbojet':
             powerplant['cost'] = data['fuels']['kerosine(euro/MWh)']/powerplant['efficiency']
         elif powerplant['type'] == 'windturbine':
