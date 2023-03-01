@@ -8,6 +8,8 @@ Build the docker image -> sudo docker image build -t bavodenys/powerplant_coding
 
 To run the docker container -> sudo docker run -p 8888:8888 bavodenys/powerplant_coding_challenge
 
+Use main.py to test the api with the payload examples -> python3 main.py
+
 
 ## Welcome !
 
