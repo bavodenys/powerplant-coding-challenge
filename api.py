@@ -16,23 +16,34 @@ def determine_production_plan():
             powerplant['cost'] = 0
         else:
             print('other type')
+
+    # Sort the powerplants on cost to produce energy
+    data['powerplants'] = sorted(data['powerplants'], key=lambda d: d['cost'])
     remaining_load = data['load']
     response = []
-    for powerplant in sorted(data['powerplants'], key=lambda d: d['cost']):
-        print(f"{powerplant['name']}:{remaining_load}, {powerplant['pmin']}")
+    for count, powerplant in enumerate(data['powerplants']):
         if remaining_load == 0:
             response.append({'name': powerplant['name'],
                              'p': 0})
         else:
             if remaining_load >= powerplant['pmin']:
+                # Get the max P of the plant
                 if powerplant['type'] == 'windturbine':
                     pmax_op = powerplant['pmax_op']
                 else:
                     pmax_op = powerplant['pmax']
+                # Compare remaining load with Pmax of powerplant
                 if pmax_op < remaining_load:
-                    response.append({'name': powerplant['name'],
-                                     'p': pmax_op})
-                    remaining_load = remaining_load - pmax_op
+                    # Check if provisioned remaining load is smaller than Pmin of the next powerplant
+                    # If so, limit P just so that next powerplant runs at min P
+                    if (remaining_load - pmax_op) < data['powerplants'][count+1]['pmin']:
+                        response.append({'name': powerplant['name'],
+                                         'p': remaining_load - data['powerplants'][count+1]['pmin']})
+                        remaining_load = data['powerplants'][count+1]['pmin']
+                    else:
+                        response.append({'name': powerplant['name'],
+                                         'p': pmax_op})
+                        remaining_load = remaining_load - pmax_op
                 else:
                     response.append({'name': powerplant['name'],
                                      'p': remaining_load})
