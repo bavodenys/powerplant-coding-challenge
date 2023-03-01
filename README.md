@@ -1,6 +1,13 @@
 # powerplant-coding-challenge
 
-Bavo Denys
+## Instructions
+
+Launch the API -> python3 api.py
+
+Build the docker image -> sudo docker image build -t bavodenys/powerplant_coding_challenge .
+
+To run the docker container -> sudo docker run -p 8888:8888 bavodenys/powerplant_coding_challenge
+
 
 ## Welcome !
 
